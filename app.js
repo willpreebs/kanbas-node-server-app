@@ -4,8 +4,10 @@ import express from 'express';
 import cors from "cors";
 import mongoose from "mongoose";
 
-const CONNECTION_STRING = process.env.DB_CONNECTION_STRING
- || "mongodb://127.0.0.1:27017/kanbas";
+// const CONNECTION_STRING = process.env.DB_CONNECTION_STRING
+//  || "mongodb://127.0.0.1:27017/kanbas";
+const CONNECTION_STRING = "mongodb+srv://fountainsAdmin:67HywSBufIfOhfWm@cluster0.3pkvr30.mongodb.net/kanbas?retryWrites=true&w=majority";
+
 mongoose.connect(CONNECTION_STRING);
 
 import session from "express-session";
