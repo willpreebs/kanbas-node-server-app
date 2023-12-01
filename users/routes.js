@@ -1,14 +1,26 @@
+import mongoose from "mongoose";
 import * as dao from "./dao.js";
-
 
 function UserRoutes(app) {
 
   const createUser = async (req, res) => {
-    const user = await dao.createUser(req.body);
-    res.json(user);
+    try {
+      const user = {...req.body, _id: new mongoose.mongo.ObjectId()}
+      const response = await dao.createUser(user);
+      res.json(response);
+    } catch (err) {
+      res.status(422);
+    }
   };
 
-  const deleteUser = async (req, res) => { };
+  const deleteUser = async (req, res) => {
+    try {
+      const status = await dao.deleteUser(req.params.userId);
+      res.json(status);
+    } catch (err)  {
+      console.log(err);
+    }
+  };
   const findAllUsers = async (req, res) => {
     const users = await dao.findAllUsers();
     res.json(users);
@@ -20,10 +32,16 @@ function UserRoutes(app) {
 
   const updateUser = async (req, res) => {
     const { userId } = req.params;
-    const status = await dao.updateUser(userId, req.body);
-    const currentUser = await dao.findUserById(userId);
-    req.session['currentUser'] = currentUser;
-    res.json(status);
+    try {
+      const status = await dao.updateUser(userId, req.body);
+      const currentUser = await dao.findUserById(userId);
+      req.session['currentUser'] = currentUser;
+      res.json(status);
+    } catch (err) {
+      console.log("Illegal username update");
+      res.status(422)
+      .json({message: `Cannot update the username`});
+    }
   };
 
   const signup = async (req, res) => {
